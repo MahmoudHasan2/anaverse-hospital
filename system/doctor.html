@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Ahmad Saleh — Anaverse Medizinsystem / نظام أنافيرس الطبي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --ink:#141B34; --muted:#727C97; --bg:#F3F5FC; --card:#FFFFFF; --line:#E8EAF4;
+  --blue:#2F54EB; --blue-tint:#EEF1FF; --blue-dark:#1D3BC7;
+  --green:#16A37A; --green-tint:#E6F8F1; --amber:#E2A73A; --amber-tint:#FCF3E3;
+  --red:#E5484D; --red-tint:#FDEAEA; --teal:#0EA5B0; --teal-tint:#E4F7F8;
+  --purple:#7C5CFC; --purple-tint:#F0ECFF;
+  --radius-lg:20px; --radius-md:14px; --radius-sm:10px;
+  --shadow:0 20px 40px -24px rgba(20,27,52,.18);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--bg);direction:rtl;}
+h1,h2,h3,h4{font-family:"Manrope",system-ui,sans-serif;margin:0;letter-spacing:-.01em;}
+p{margin:0;color:var(--muted);}
+a{text-decoration:none;color:inherit;}
+ul{margin:0;padding:0;list-style:none;}
+button{font-family:inherit;cursor:pointer;}
+svg{display:block;}
+
+/* bilingual helper: German line first, Arabic line second, always separate lines */
+.t{display:flex;flex-direction:column;gap:2px;}
+.t .de{font-size:.72em;font-weight:600;color:var(--muted);direction:ltr;unicode-bidi:isolate;line-height:1.25;}
+.t .ar{line-height:1.3;}
+.tp{display:flex;flex-direction:column;gap:6px;}
+.tp .de{direction:ltr;unicode-bidi:isolate;color:var(--muted);font-size:.92em;margin:0;}
+.tp .ar{margin:0;}
+h1 .de,h2 .de,h3 .de{font-weight:700;}
+
+.app-shell{display:flex;min-height:100vh;}
+.sidebar{width:278px;flex:none;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.side-brand{display:flex;align-items:center;gap:10px;padding:0 6px 18px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+.side-brand .mark{width:36px;height:36px;border-radius:10px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;}
+.side-brand strong{display:block;font-size:13.5px;}
+.side-brand span{font-size:10.5px;color:var(--muted);}
+
+.side-label{font-size:10.5px;color:var(--muted);font-weight:700;padding:12px 10px 6px;}
+.side-nav a{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:11px;font-size:12.8px;font-weight:600;color:var(--muted);margin-bottom:2px;transition:background .15s,color .15s;}
+.side-nav a svg{width:17px;height:17px;flex:none;}
+.side-nav a:hover{background:var(--bg);color:var(--ink);}
+.side-nav a.active{background:var(--blue-tint);color:var(--blue);}
+.side-nav a .count{margin-right:auto;background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:100px;}
+.side-nav a .t .de{font-size:9.5px;}
+
+.side-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);}
+.side-user{display:flex;align-items:center;gap:10px;padding:8px 6px;}
+.side-user .av{width:36px;height:36px;border-radius:11px;background:var(--purple-tint);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+.side-user strong{display:block;font-size:12.5px;}
+.side-user span{font-size:10.5px;color:var(--muted);}
+.side-exit{display:flex;align-items:center;gap:10px;margin-top:8px;padding:9px 11px;border-radius:11px;font-size:12px;font-weight:700;color:var(--red);}
+.side-exit svg{width:15px;height:15px;}
+
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 30px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;}
+.topbar h1{font-size:18px;}
+.top-actions{display:flex;align-items:center;gap:12px;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:9px 16px;width:220px;}
+.search-box svg{width:16px;height:16px;color:var(--muted);flex:none;}
+.search-box input{border:none;background:none;outline:none;font-size:12.5px;width:100%;font-family:inherit;}
+.icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;position:relative;flex:none;}
+.icon-btn svg{width:16px;height:16px;color:var(--muted);}
+.icon-btn .dot{position:absolute;top:7px;left:8px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.av-chip{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12.5px;flex:none;}
+
+.content{padding:26px 30px 60px;max-width:1360px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.pill-select{font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:#fff;flex:none;white-space:nowrap;}
+
+.grid{display:grid;gap:18px;}
+.g-2{grid-template-columns:1fr 1fr;}
+.g-3{grid-template-columns:repeat(3,1fr);}
+.g-4{grid-template-columns:repeat(4,1fr);}
+.g-main-side{grid-template-columns:1.6fr 1fr;align-items:start;}
+@media (max-width:1100px){.g-4{grid-template-columns:repeat(2,1fr);}.g-3{grid-template-columns:repeat(2,1fr);}.g-main-side{grid-template-columns:1fr;}.g-2{grid-template-columns:1fr;}}
+
+.stat-card{display:flex;align-items:center;gap:13px;}
+.stat-card .ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;}
+.stat-card .ic svg{width:20px;height:20px;}
+.stat-card strong{display:block;font-size:19px;font-weight:800;}
+.trend{font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:3px;margin-top:3px;}
+.trend.up{color:var(--green);}
+.trend.down{color:var(--red);}
+
+.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:100px;width:fit-content;flex-wrap:wrap;}
+.tabs button{border:none;background:none;padding:8px 15px;border-radius:100px;font-size:11.8px;font-weight:700;color:var(--muted);font-family:inherit;cursor:pointer;}
+.tabs button .de{font-size:9px;}
+.tabs button.active{background:var(--ink);color:#fff;}
+.tabs button.active .de{color:#cfd4ea;}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;padding:5px 10px;border-radius:100px;white-space:nowrap;}
+.tag.green{background:var(--green-tint);color:var(--green);}
+.tag.amber{background:var(--amber-tint);color:var(--amber);}
+.tag.red{background:var(--red-tint);color:var(--red);}
+.tag.blue{background:var(--blue-tint);color:var(--blue);}
+.tag.purple{background:var(--purple-tint);color:var(--purple);}
+.tag.teal{background:var(--teal-tint);color:var(--teal);}
+.tag.grey{background:var(--bg);color:var(--muted);}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:11px;font-size:11.8px;font-weight:700;border:1px solid transparent;font-family:inherit;cursor:pointer;}
+.btn svg{width:14px;height:14px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-line{background:#fff;border-color:var(--line);color:var(--ink);}
+.btn-soft{background:var(--blue-tint);color:var(--blue);}
+.btn-sm{padding:7px 11px;font-size:10.8px;}
+
+.row-list li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);}
+.row-list li:last-child{border-bottom:none;padding-bottom:0;}
+.row-list .av{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;font-weight:800;font-size:11.5px;}
+.row-list strong{display:block;font-size:12.5px;}
+.row-list span.sub{font-size:11px;color:var(--muted);}
+.row-list .meta{margin-right:auto;text-align:left;flex:none;}
+
+.barchart{display:flex;align-items:flex-end;gap:12px;height:150px;padding-top:10px;}
+.barchart .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;}
+.barchart .bar{width:100%;max-width:32px;border-radius:8px 8px 3px 3px;background:var(--blue-tint);position:relative;}
+.barchart .bar span{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--ink);white-space:nowrap;}
+.barchart .bar-wrap small{font-size:9.5px;color:var(--muted);text-align:center;}
+
+.linechart-wrap{width:100%;}
+.linechart-wrap svg{width:100%;height:auto;overflow:visible;}
+
+.donut-wrap{display:flex;align-items:center;gap:16px;}
+.donut{width:100px;height:100px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;}
+.donut strong{font-size:17px;font-weight:800;}
+.donut span{font-size:9px;color:var(--muted);}
+.legend li{display:flex;align-items:center;gap:8px;font-size:11.5px;margin-bottom:8px;}
+.legend i{width:9px;height:9px;border-radius:3px;flex:none;}
+
+.table{width:100%;border-collapse:collapse;font-size:12px;}
+.table th{text-align:right;color:var(--muted);font-weight:700;padding:9px 9px;border-bottom:1px solid var(--line);font-size:10.8px;}
+.table td{padding:10px 9px;border-bottom:1px solid var(--line);}
+.table tr:last-child td{border-bottom:none;}
+
+.bodymap{position:relative;width:100%;max-width:210px;margin:0 auto;}
+.bodymap svg{width:100%;color:var(--blue-tint);}
+.bodymap .pin{position:absolute;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:800;box-shadow:0 0 0 4px #fff,var(--shadow);}
+.map-case-list li{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);}
+.map-case-list li:last-child{border:none;padding-bottom:0;}
+.map-case-list .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none;}
+
+.chat-msg{display:flex;gap:10px;margin-bottom:15px;}
+.chat-msg .av{width:31px;height:31px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;}
+.chat-bubble{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:11.8px;}
+.chat-bubble strong{display:block;font-size:11.5px;margin-bottom:3px;}
+.chat-bubble.me{background:var(--blue-tint);}
+
+.flow-row{display:flex;align-items:stretch;gap:0;}
+.flow-stage{flex:1;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;}
+.flow-arrow{flex:none;width:50px;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.flow-arrow svg{width:20px;height:20px;}
+.stage-icon{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.member-chip{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid var(--line);}
+.member-chip:first-of-type{border-top:none;margin-top:8px;}
+.member-chip .av{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex:none;}
+.rel-card{display:flex;gap:13px;align-items:flex-start;}
+.rel-pair{display:flex;align-items:center;flex:none;}
+.rel-pair .circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);}
+.rel-pair .circle:last-child{margin-right:-9px;}
+
+.board-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media (max-width:1000px){.board-cols{grid-template-columns:1fr;}}
+.board-col{background:var(--bg);border-radius:16px;padding:14px;}
+.board-col-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.board-card{background:#fff;border-radius:13px;padding:12px;border:1px solid var(--line);margin-bottom:10px;}
+.board-card:last-child{margin-bottom:0;}
+
+.flex-between{display:flex;align-items:center;justify-content:space-between;}
+.hr{height:1px;background:var(--line);margin:16px 0;}
+.subnote{font-size:11px;color:var(--muted);}
+
+
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a href="../index.html" class="side-brand">
+      <span class="mark"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+      <div><strong>Anaverse System</strong><span>نظام أنافيرس الطبي</span></div>
+    </a>
+
+    <div class="side-label"><span class="t"><span class="de">Allgemein</span><span class="ar">عام</span></span></div>
+    <nav class="side-nav">
+    <a href="index.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span class="t"><span class="de">Systemübersicht</span><span class="ar">لوحة الأنظمة</span></span></a>
+<a href="relations.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M10.6 6.8 6.4 17M13.4 6.8l4.2 10.2M7.5 19h9"/></svg><span class="t"><span class="de">Team & Beziehungen</span><span class="ar">العلاقات والفريق الطبي</span></span></a>
+
+    </nav>
+
+    <div class="side-label"><span class="t"><span class="de">Medizinische Abteilungen</span><span class="ar">الأقسام الطبية</span></span></div>
+    <nav class="side-nav">
+    <a href="doctor.html" class="active"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="t"><span class="de">Arztprofile & Untersuchungen</span><span class="ar">ملفات الأطباء والمعاينات</span></span></a>
+<a href="pharmacy.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="2"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg><span class="t"><span class="de">Interne Apotheke</span><span class="ar">الصيدلية الداخلية</span></span></a>
+<a href="nursing.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="14" rx="3"/><path d="M8 4v4M16 4v4"/></svg><span class="t"><span class="de">Pflege</span><span class="ar">التمريض</span></span></a>
+<a href="lab.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M10 2v6l-5 10a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-10V2"/></svg><span class="t"><span class="de">Labor & Radiologie</span><span class="ar">المختبر والأشعة</span></span></a>
+<a href="emergency.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="4"/></svg><span class="t"><span class="de">Notaufnahme</span><span class="ar">الطوارئ</span></span></a>
+
+    </nav>
+
+    <div class="side-label"><span class="t"><span class="de">Verwaltung</span><span class="ar">الإدارة</span></span></div>
+    <nav class="side-nav">
+    <a href="finance.html" class=""><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-6"/></svg><span class="t"><span class="de">Verwaltung & Finanzen</span><span class="ar">الإدارة والمالية</span></span></a>
+
+    </nav>
+    
+    <div class="side-label"><span class="t"><span class="de">Mein Arztkonto</span><span class="ar">حسابي كطبيب</span></span></div>
+    <nav class="side-nav">
+      <a href="doctor.html#tasks"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="t"><span class="de">Aufgaben</span><span class="ar">لوحة المهام</span></span></a>
+      <a href="doctor.html#cases"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-1a8 8 0 0 1 16 0v1"/><circle cx="12" cy="8" r="4"/></svg><span class="t"><span class="de">Meine Fälle</span><span class="ar">حالاتي الطبية</span></span></a>
+      <a href="doctor.html#referrals"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2M7 16v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-2"/></svg><span class="t"><span class="de">Überweisungen</span><span class="ar">التحويلات والمتابعات</span></span><span class="count">3</span></a>
+      <a href="doctor.html#calendar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/></svg><span class="t"><span class="de">Sprechstundenplan</span><span class="ar">جدول العيادة</span></span></a>
+      <a href="doctor.html#mail"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="t"><span class="de">Nachrichten</span><span class="ar">الرسائل</span></span><span class="count">5</span></a>
+    </nav>
+
+
+    <div class="side-foot">
+      <div class="side-user">
+        <span class="av">أص</span>
+        <div><strong>Dr. Ahmad Saleh / د. أحمد صالح</strong><span><span class="t"><span class="de">Kardiologe</span><span class="ar">اختصاصي قلبية</span></span></span></div>
+      </div>
+      <a href="../index.html" class="side-exit"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span class="t"><span class="de">Zurück zur Website</span><span class="ar">الخروج إلى الموقع</span></span></a>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1><span class="t"><span class="de">Guten Morgen, Dr. Ahmad</span><span class="ar">صباح الخير، د. أحمد 👋</span></span></h1>
+        <p class="subnote" style="margin-top:6px;"><span class="t"><span class="de">Dienstag, 16. September — Ihre Aufgaben und Fälle im Überblick</span><span class="ar">الثلاثاء، 16 أيلول — إليك ملخص مهامك وحالاتك لهذا اليوم</span></span></p>
+      </div>
+      <div class="top-actions">
+        <div class="search-box"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input type="text" placeholder="Suchen... / ابحث..."></div>
+        <button class="icon-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></button>
+        <span class="av-chip" style="background:var(--blue-tint);color:var(--blue);">أص</span>
+      </div>
+    </div>
+    <div class="content">
+
+      <div class="grid g-main-side">
+
+        <!-- side col: appointments + referrals -->
+        <div>
+          <div class="card" style="margin-bottom:18px;" id="appointments">
+            <div class="card-head"><h3><span class="t"><span class="de">Nächste Aufgaben</span><span class="ar">المهام القادمة</span></span></h3><span class="pill-select"><span class="t"><span class="de">Heute</span><span class="ar">اليوم</span></span> ▾</span></div>
+            <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:15px;">
+              <div style="text-align:center;flex:none;width:44px;padding:8px 0;border-radius:12px;background:var(--bg);"><div style="font-size:9px;color:var(--muted);">So / أحد</div><div style="font-size:12px;font-weight:800;">14</div></div>
+              <div style="text-align:center;flex:none;width:44px;padding:8px 0;border-radius:12px;background:var(--bg);"><div style="font-size:9px;color:var(--muted);">Mo / اثن</div><div style="font-size:12px;font-weight:800;">15</div></div>
+              <div style="text-align:center;flex:none;width:44px;padding:8px 0;border-radius:12px;background:var(--ink);color:#fff;"><div style="font-size:9px;opacity:.7;">Di / ثلا</div><div style="font-size:12px;font-weight:800;">16</div></div>
+              <div style="text-align:center;flex:none;width:44px;padding:8px 0;border-radius:12px;background:var(--bg);"><div style="font-size:9px;color:var(--muted);">Mi / أرب</div><div style="font-size:12px;font-weight:800;">17</div></div>
+              <div style="text-align:center;flex:none;width:44px;padding:8px 0;border-radius:12px;background:var(--bg);"><div style="font-size:9px;color:var(--muted);">Do / خمي</div><div style="font-size:12px;font-weight:800;">18</div></div>
+            </div>
+
+            <div style="border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:11px;">
+              <div class="flex-between">
+                <strong class="t"><span class="de">CT-Scan — Herz</span><span class="ar">تصوير طبقي — القلب</span></strong>
+                <span class="btn btn-primary btn-sm"><span class="t"><span class="de">Starten</span><span class="ar">بدء المهمة</span></span></span>
+              </div>
+              <p style="font-size:11px;margin-top:6px;"><span class="t"><span class="de">Patientin: Heba Nasr</span><span class="ar">المريضة: هبة نصر</span></span></p>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;color:var(--muted);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <span class="t"><span class="de">18:00 Uhr</span><span class="ar">6:00 مساءً</span></span></div>
+            </div>
+
+            <div style="border:1px solid var(--line);border-radius:14px;padding:13px;">
+              <div class="flex-between">
+                <strong class="t"><span class="de">Vorbereitung OP</span><span class="ar">تحضير ما قبل الجراحة</span></strong>
+                <span class="btn btn-line btn-sm"><span class="t"><span class="de">Starten</span><span class="ar">بدء المهمة</span></span></span>
+              </div>
+              <p style="font-size:11px;margin-top:6px;"><span class="t"><span class="de">Patient: Karim Ghanem</span><span class="ar">المريض: كريم غانم</span></span></p>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;color:var(--muted);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <span class="t"><span class="de">20:00 Uhr</span><span class="ar">8:00 مساءً</span></span></div>
+            </div>
+          </div>
+
+          <div class="card" id="referrals">
+            <div class="card-head"><h3><span class="t"><span class="de">Überweisungen & Nachsorge</span><span class="ar">التحويلات والمتابعات</span></span></h3><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></div>
+
+            <div class="chat-msg">
+              <span class="av" style="background:var(--blue-tint);color:var(--blue);">أص</span>
+              <div class="chat-bubble me"><strong class="t"><span class="de">Sie</span><span class="ar">أنت</span></strong><div class="t"><span class="de">Fall von Heba Nasr an Dr. Salma Qasem überwiesen — wartet auf Bewertung.</span><span class="ar">حوّلت حالة المريضة هبة نصر إلى د. سلمى قاسم لمتابعة الجانب التنفسي — بانتظار تقييمها.</span></div></div>
+            </div>
+            <div class="chat-msg">
+              <span class="av" style="background:var(--purple-tint);color:var(--purple);">سق</span>
+              <div class="chat-bubble"><strong class="t"><span class="de">Dr. Salma Qasem</span><span class="ar">د. سلمى قاسم</span></strong><div class="t"><span class="de">Fall übernommen, Besuch heute Nachmittag, Notizen folgen vor dem CT.</span><span class="ar">استلمت الحالة، سأزورها اليوم عصرًا وأرسل لك ملاحظاتي قبل التصوير الطبقي.</span></div></div>
+            </div>
+            <div class="chat-msg">
+              <span class="av" style="background:var(--red-tint);color:var(--red);">مم</span>
+              <div class="chat-bubble"><strong class="t"><span class="de">Schwester Lin Haddad</span><span class="ar">الممرضة لين حداد</span></strong><div class="t"><span class="de">Vitalwerte von Karim Ghanem instabil — bitte vor dem OP-Saal prüfen.</span><span class="ar">علامات حيوية المريض كريم غانم غير مستقرة — تحتاج متابعتك قبل غرفة العمليات.</span></div></div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              <div class="search-box" style="width:100%;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><input type="text" placeholder="Antwort... / رد سريع..."></div>
+              <span class="icon-btn" style="background:var(--blue);color:#fff;border-color:var(--blue);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- main col -->
+        <div>
+          <div class="grid g-2" style="margin-bottom:18px;">
+
+            <div class="card" id="cases">
+              <div class="card-head"><h3><span class="t"><span class="de">Letzte bearbeitete Fälle</span><span class="ar">آخر الحالات التي شاركت بها</span></span></h3><span class="pill-select"><span class="t"><span class="de">Diese Woche</span><span class="ar">هذا الأسبوع</span></span> ▾</span></div>
+              <div class="bodymap">
+                <svg viewBox="0 0 100 220" fill="currentColor"><ellipse cx="50" cy="24" rx="16" ry="18"/><rect x="30" y="42" width="40" height="70" rx="16"/><rect x="10" y="46" width="16" height="62" rx="8"/><rect x="74" y="46" width="16" height="62" rx="8"/><rect x="34" y="112" width="15" height="90" rx="7"/><rect x="51" y="112" width="15" height="90" rx="7"/></svg>
+                <span class="pin" style="top:30%;right:36%;background:var(--red);">1</span>
+                <span class="pin" style="top:52%;right:20%;background:var(--amber);">2</span>
+                <span class="pin" style="top:82%;right:52%;background:var(--blue);">3</span>
+              </div>
+              <ul class="map-case-list" style="margin-top:16px;">
+                <li><span class="dot" style="background:var(--red);"></span><div><strong class="t"><span class="de">Herzproblem — Koronararterie</span><span class="ar">مشكلة قلبية — شريان تاجي</span></strong><div class="t" style="margin-top:4px;"><span class="de" style="font-size:10.5px;">Häufige Erkrankung der Herzarterien.</span><span class="ar" style="font-size:11.5px;color:var(--muted);">حالة شائعة تؤثر على الشرايين المغذية للقلب.</span></div><span style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;display:block;"><span class="t"><span class="de">mit Dr. Rayan Fares</span><span class="ar">بالتعاون مع د. ريان فارس</span></span></span></div></li>
+                <li><span class="dot" style="background:var(--amber);"></span><div><strong class="t"><span class="de">Leichte Niereninsuffizienz</span><span class="ar">اعتلال كلوي بسيط</span></strong><div class="t" style="margin-top:4px;"><span class="de" style="font-size:10.5px;">Nierenfunktion nach Entzündungstherapie beobachten.</span><span class="ar" style="font-size:11.5px;color:var(--muted);">متابعة وظائف الكلى بعد العلاج المضاد للالتهاب.</span></div><span style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;display:block;"><span class="t"><span class="de">mit Dr. Lara Hamdan</span><span class="ar">بالتعاون مع د. لارا حمدان</span></span></span></div></li>
+                <li><span class="dot" style="background:var(--blue);"></span><div><strong class="t"><span class="de">Knieverletzung</span><span class="ar">إصابة في الركبة</span></strong><div class="t" style="margin-top:4px;"><span class="de" style="font-size:10.5px;">Überweisung zur orthopädischen Beurteilung.</span><span class="ar" style="font-size:11.5px;color:var(--muted);">تحويل لأخصائي العظام لتقييم إضافي.</span></div><span style="font-size:10.5px;color:var(--blue);font-weight:700;margin-top:5px;display:block;"><span class="t"><span class="de">mit Dr. Fadi Issa</span><span class="ar">بالتعاون مع د. فادي عيسى</span></span></span></div></li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3><span class="t"><span class="de">Aufgabenübersicht</span><span class="ar">نظرة عامة على المهام</span></span></h3><span class="pill-select"><span class="t"><span class="de">Heute</span><span class="ar">اليوم</span></span> ▾</span></div>
+              <div class="tabs" style="margin-bottom:16px;" id="tasks">
+                <button class="active"><span class="t"><span class="de">Sprechstunden</span><span class="ar">معاينات</span></span></button>
+                <button><span class="t"><span class="de">Operationen</span><span class="ar">عمليات</span></span></button>
+                <button><span class="t"><span class="de">Überweisungen</span><span class="ar">تحويلات</span></span></button>
+                <button><span class="t"><span class="de">Notfälle</span><span class="ar">طوارئ</span></span></button>
+              </div>
+              <div class="grid g-2" style="gap:11px;">
+                <div style="border:1px solid var(--line);border-radius:12px;padding:11px;">
+                  <span class="tag blue"><span class="t"><span class="de">Patienten</span><span class="ar">عدد المرضى</span></span></span>
+                  <strong style="display:block;font-size:18px;margin-top:7px;">14</strong>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:12px;padding:11px;">
+                  <span class="tag green"><span class="t"><span class="de">Abgeschlossen</span><span class="ar">مكتملة</span></span></span>
+                  <strong style="display:block;font-size:18px;margin-top:7px;">80٪</strong>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:12px;padding:11px;">
+                  <span class="tag amber"><span class="t"><span class="de">Wartezeit</span><span class="ar">وقت الانتظار</span></span></span>
+                  <strong style="display:block;font-size:18px;margin-top:7px;">12 Min</strong>
+                </div>
+                <div style="border:1px solid var(--line);border-radius:12px;padding:11px;">
+                  <span class="tag red"><span class="t"><span class="de">Dringende Fälle</span><span class="ar">حالات عاجلة</span></span></span>
+                  <strong style="display:block;font-size:18px;margin-top:7px;">2</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3><span class="t"><span class="de">Meine aktuellen Aufgaben</span><span class="ar">مهامي الحالية</span></span></h3><span class="pill-select"><span class="t"><span class="de">Heute</span><span class="ar">اليوم</span></span> ▾</span></div>
+            <div class="grid g-2">
+              <div style="border:1px solid var(--line);border-radius:14px;padding:15px;">
+                <div class="flex-between">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="ic" style="width:36px;height:36px;border-radius:11px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span>
+                    <strong class="t"><span class="de">Kardiologische Morgensprechstunde</span><span class="ar">عيادة قلبية صباحية</span></strong>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:13px;">
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Morgens</span><span class="ar">صباحًا</span></span></div><div style="font-size:11px;font-weight:700;">6</div></div>
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Mittags</span><span class="ar">ظهرًا</span></span></div><div style="font-size:11px;font-weight:700;">3</div></div>
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Abends</span><span class="ar">مساءً</span></span></div><div style="font-size:11px;font-weight:700;">2</div></div>
+                </div>
+              </div>
+
+              <div style="border:1px solid var(--line);border-radius:14px;padding:15px;">
+                <div class="flex-between">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="ic" style="width:36px;height:36px;border-radius:11px;background:var(--purple-tint);color:var(--purple);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+                    <strong class="t"><span class="de">Postoperative Nachsorgerunde</span><span class="ar">جولة متابعة ما بعد الجراحة</span></strong>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:13px;">
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Zi. 204</span><span class="ar">غرفة 204</span></span></div><div style="font-size:11px;font-weight:700;"><span class="t"><span class="de">stabil</span><span class="ar">مستقر</span></span></div></div>
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Zi. 207</span><span class="ar">غرفة 207</span></span></div><div style="font-size:11px;font-weight:700;"><span class="t"><span class="de">Besserung</span><span class="ar">تحسّن</span></span></div></div>
+                  <div style="flex:1;background:var(--bg);border-radius:10px;padding:7px;text-align:center;"><div style="font-size:9.5px;color:var(--muted);"><span class="t"><span class="de">Zi. 211</span><span class="ar">غرفة 211</span></span></div><div style="font-size:11px;font-weight:700;"><span class="t"><span class="de">Beobachtung</span><span class="ar">مراقبة</span></span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script>
+
+document.querySelectorAll('.tabs').forEach(function(group){
+  group.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      group.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+  });
+});
+
+</script>
+</body>
+</html>
